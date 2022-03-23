@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HackerNewsApp</title>
+    <script src="https://kit.fontawesome.com/48bf10ba77.js" crossorigin="anonymous"></script>
+    <script type="module" src="./resources/js/domscript.js" defer></script>
+    <link href="./resources/css/styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="grid-container">
+        <header>
+            <div id="search-box">
+                <ul class="search-item-group">
+                    <li class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></li>
+                    <li class="search-container">
+                        <input type="search" id="searchfield" name="searchValue">
+                        <input type="submit" value="Search">
+                    </li>
+                </ul>
+            </div>
+
+            <nav>
+                <ul class="toggle-layout-buttons">
+                    <li>View</li>
+                    <li class="grid-lines"><i class="fa-solid fa-grip-lines"></i></li>
+                    <li class="grid-boxes"><i class="fa-solid fa-table-cells"></i></li>
+                </ul>
+            </nav>
+
+            <div id="sortBy">
+                <p>
+                    <label for="filter-options">SortBy</label>
+                    <select name="sortby" id="filter-options">
+                        <option value="story">Story</option>
+                        <option value="comment">Comment</option>
+                        <option value="poll">Poll</option>
+                        <option value="pollopt">Poll-Opt</option>
+                        <option value="show_hn">Show_HN</option>
+                        <option value="ask_hn">Ask_HN</option>
+                        <option value="front_page">FrontPage</option>
+                        <option value="created_at_i">Date</option>
+                        <option value="points">Points</option>
+                        <option value="num_comments">No. of Comments</option>
+                    </select>
+                </p>
+            </div>
+        </header>
+
+        <div id="show-deletebtn">
+            <div>
+                <button id="selectAll" type="button"><i class="fa-solid fa-circle-check"></i>Select All</button>
+                <button id="de-selectAll" type="button"><i class="fa-solid fa-circle-minus"></i>De-Select All</button>
+            </div>
+            <button id="deleteAll" type="button"><i class="fa-solid fa-trash-can"></i></button>
+        </div>
+
+        <main>
+            <div class="checkBoxContainer"></div>
+            <div id="newsList">
+                <!--To dynamically insert content here-->
+            </div>
+            <div class="newsDeleteBtnContainer"></div>
+        </main>
+
+        <div id="show-pagination">
+            <p>pagination shows here</p>
+        </div>
+
+        <footer>
+            <p>&copy; All Rights Reserved. NatCobbinah -2022</p>
+        </footer>
+    </div>
+</body>
+
+</html>
