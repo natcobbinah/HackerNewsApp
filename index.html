@@ -16,7 +16,8 @@
         <header>
             <div id="search-box">
                 <ul class="search-item-group">
-                    <li class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></li>
+                    <li class="search-icon"><button type="button"><i
+                                class="fa-solid fa-magnifying-glass"></i>Search</button></li>
                     <li class="search-container">
                         <input type="search" id="searchfield" name="searchValue">
                         <input type="submit" value="Search">
@@ -56,7 +57,7 @@
                 <button id="selectAll" type="button"><i class="fa-solid fa-circle-check"></i>Select All</button>
                 <button id="de-selectAll" type="button"><i class="fa-solid fa-circle-minus"></i>De-Select All</button>
             </div>
-            <button id="deleteAll" type="button"><i class="fa-solid fa-trash-can"></i></button>
+            <button id="deleteAll" type="button"><i class="fa-solid fa-trash-can"></i>Delete-All</button>
         </div>
 
         <main>
@@ -68,7 +69,12 @@
         </main>
 
         <div id="show-pagination">
-            <p>pagination shows here</p>
+                <p>Number of Pages:<span class="nofPages"></span></p>
+                <p>Current Page:<span class="currentPage"></span></p>
+                <div class="pageLoadBtns">
+                    <p><button id="prevPageLoadBtn" type="button"><i class="fa-solid fa-circle-chevron-left"></i>prev</button></p>
+                    <p><button id="nextPageLoadBtn" type="button">next<i class="fa-solid fa-circle-chevron-right"></i></button></p>
+                </div>
         </div>
 
         <footer>

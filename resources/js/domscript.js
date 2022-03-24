@@ -16,6 +16,11 @@ let newsDeleteBtnContainer = document.querySelector('main .newsDeleteBtnContaine
 let selectAllBtn = document.querySelector('#show-deletebtn #selectAll');
 let DeselectAllBtn = document.querySelector('#show-deletebtn #de-selectAll');
 let deleteAllBtn = document.querySelector('#show-deletebtn #deleteAll');
+//pagination text and btns
+let numberOfPages = document.querySelector('#show-pagination p .nofPages');
+let currentPage = document.querySelector('#show-pagination p .currentPage');
+let prevPageLoadBtn = document.querySelector("#show-pagination .pageLoadBtns #prevPageLoadBtn");
+let nextPageLoadBtn = document.querySelector("#show-pagination .pageLoadBtns #nextPageLoadBtn");
 
 //searchIcon on click show searchField
 searchIcon.addEventListener('click', () => {
@@ -47,17 +52,38 @@ singleLineView.addEventListener('click', () => {
 
 
 //from apiendpoints
-/* async function defaultNewsToDisplay() {
-    let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField));
+async function defaultNewsToDisplay(page) {
+    let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField,page));
     return retrievedNewsData;
 } 
 
 let newsArray = await defaultNewsToDisplay();
 console.log(newsArray);
-*/
+
 
 //static data here
-let newsArray = data;
+//let newsArray = data;
+//console.log(newsArray);
+
+//set number of Pages in searchResult
+numberOfPages.innerHTML = newsArray.nbPages;
+numberOfPages.style.marginLeft = "10px";
+
+//set the currentPage in the searchResult retrived
+currentPage.innerHTML = newsArray.page;
+currentPage.style.marginLeft = "10px";
+
+//nextPageLoad btn pressed
+nextPageLoadBtn.addEventListener('click', async () => {
+    console.log(`${currentPage.innerHTML + 1}`);
+    defaultNewsToDisplay(`${currentPage.innerHTML + 1}`);
+});
+
+//prevPageLoad btn pressed
+prevPageLoadBtn.addEventListener('click', () => {
+    console.log("prev button pressed");
+});
+
 
 const dynamicUlElements = newsArray.hits.map((newsInfo, index) => {
 
@@ -136,6 +162,11 @@ DeselectAllBtn.addEventListener('click', () => {
         //set deleteAll btn to visible
         deleteAll.style.display = "none";
     })
+});
+
+//on-deleteAll btn clicked
+deleteAllBtn.addEventListener('click', () => {
+   
 });
 
 

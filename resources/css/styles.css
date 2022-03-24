@@ -35,6 +35,10 @@ header #search-box ul li{
     padding: 0 0.5rem;
 }
 
+header #search-box ul .search-icon button{
+    padding: 0.7rem;
+}
+
 header #search-box ul .search-container input{
     border-radius: 3rem;
     padding: 10px;
@@ -104,16 +108,33 @@ header nav .toggle-layout-buttons li:nth-child(3){
 main{
     grid-column: 1 / span 12;
     border: 1px solid black;
-    background-color: #868686;
+    background-color: #d8d8d8;
 }
 
 
 #show-pagination{
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     grid-column: 1 / span 12;
     background-color: #d8d8d8;
 }
+
+#show-pagination .pageLoadBtns{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#show-pagination .pageLoadBtns #prevPageLoadBtn,
+#show-pagination .pageLoadBtns #nextPageLoadBtn{
+    margin-right: 0.4rem;
+    padding: 0.7rem;
+}
+
+#show-pagination .pageLoadBtns p i{
+    margin: 0.2rem;
+}
+
 
 footer{
     display: flex;
