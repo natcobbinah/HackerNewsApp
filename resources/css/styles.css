@@ -26,10 +26,9 @@ header #search-box ul{
    list-style-type: none;
 }
 
-/*  header #search-box ul li:first-child{
-    font-size: 1.8rem;
+  header #search-box ul li:first-child{
     color: #fff;
-}  */
+}  
 
 header #search-box ul li{
     padding: 0 0.5rem;
@@ -138,4 +137,12 @@ footer{
 
 footer p{
     color: #fff;
+}
+
+/*media queries*/
+@media only screen and (max-width: 480px){
+    header #search-box ul .search-container input:first-child{
+        width: 15rem;
+    }
+    
 }
