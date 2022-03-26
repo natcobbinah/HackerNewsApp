@@ -26,31 +26,22 @@ header #search-box ul{
    list-style-type: none;
 }
 
-header #search-box ul li:first-child{
+/*  header #search-box ul li:first-child{
     font-size: 1.8rem;
     color: #fff;
-}
+}  */
 
 header #search-box ul li{
     padding: 0 0.5rem;
 }
 
-header #search-box ul .search-icon button{
-    padding: 0.7rem;
-}
-
 header #search-box ul .search-container input{
-    border-radius: 3rem;
-    padding: 10px;
+    padding: 15px;
     border: none;
 }
 
-header #search-box ul .search-container{
-    display: none;
-}
-
 header #search-box ul .search-container input:first-child{
-    width: 15rem;
+    width: 50rem;
 }
 
 header nav{

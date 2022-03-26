@@ -16,16 +16,18 @@
         <header>
             <div id="search-box">
                 <ul class="search-item-group">
-                    <li class="search-icon"><button type="button"><i
-                                class="fa-solid fa-magnifying-glass"></i>Search</button></li>
+                    <li class="search-icon">
+                        HN
+                        <img src="./resources/images/hackerNewsLogo.svg" alt="hackerNewsLogo">
+                    </li>
                     <li class="search-container">
-                        <input type="search" id="searchfield" name="searchValue">
+                        <input type="search" id="searchfield" name="searchValue" placeholder="Search">
                         <input type="submit" value="Search">
                     </li>
                 </ul>
             </div>
 
-            <nav>
+           <!--  <nav> would be sued later for different logic scenario
                 <ul class="toggle-layout-buttons">
                     <li>View</li>
                     <li class="grid-lines"><i class="fa-solid fa-grip-lines"></i></li>
@@ -49,15 +51,15 @@
                         <option value="num_comments">No. of Comments</option>
                     </select>
                 </p>
-            </div>
+            </div> -->
         </header>
 
         <div id="show-deletebtn">
-            <div>
+            <!-- <div> would be used later for different logic scenario
                 <button id="selectAll" type="button"><i class="fa-solid fa-circle-check"></i>Select All</button>
                 <button id="de-selectAll" type="button"><i class="fa-solid fa-circle-minus"></i>De-Select All</button>
             </div>
-            <button id="deleteAll" type="button"><i class="fa-solid fa-trash-can"></i>Delete-All</button>
+            <button id="deleteAll" type="button"><i class="fa-solid fa-trash-can"></i>Delete-All</button> -->
         </div>
 
         <main>
@@ -69,6 +71,7 @@
         </main>
 
         <div id="show-pagination">
+                <p>Current NewsFeed Total: <span class="newsFeedCount"></span></p>
                 <p>Number of Pages:<span class="nofPages"></span></p>
                 <p>Current Page:<span class="currentPage"></span></p>
                 <div class="pageLoadBtns">

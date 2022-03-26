@@ -1,6 +1,5 @@
 import { fetchHackerNews_data } from './api_methods.js';
 import { getSearchTextTerm } from '../modules/searchTextTerm.js';
-import data from './staticData.js';
 
 let searchField = document.querySelector('input[type=search]');
 let submitBtn = document.querySelector('input[type=submit]');
@@ -19,19 +18,21 @@ let deleteAllBtn = document.querySelector('#show-deletebtn #deleteAll');
 //pagination text and btns
 let numberOfPages = document.querySelector('#show-pagination p .nofPages');
 let currentPage = document.querySelector('#show-pagination p .currentPage');
+let currentNewsFeedTotal = document.querySelector('#show-pagination p .newsFeedCount')
 let prevPageLoadBtn = document.querySelector("#show-pagination .pageLoadBtns #prevPageLoadBtn");
 let nextPageLoadBtn = document.querySelector("#show-pagination .pageLoadBtns #nextPageLoadBtn");
+//starting value for pagination
+let page = 0;
 
-//searchIcon on click show searchField
-searchIcon.addEventListener('click', () => {
-   if(searchFieldContainer.style.display === "none"){
-    searchFieldContainer.style.display = "block";
-   }else{
-    searchFieldContainer.style.display = "none";
-   }
-});
+//store apiData to be fetched
+let newsArray = [];
 
-//on tripleGridView icon pressed
+//Since on nextPage Press, new data is fetched into the array
+//we use this index in the loop depending on the value of fetchedDataArrayIndex
+//see the fxn below, to see how data is handled
+let fetchedDataArrayIndex = 0;
+
+/* //on tripleGridView icon pressed //would be used later for different logic scenario
 tripleGridView.addEventListener('click', () => {
     singleLineView.style.backgroundColor = "#353535";
     tripleGridView.style.backgroundColor = 'red';
@@ -49,100 +50,79 @@ singleLineView.addEventListener('click', () => {
     //change mainContainer layout to singleViewLayout
     mainContainer.style.gridColumn = "1 / span 12";
 });
-
-
+ */
 //from apiendpoints
-async function defaultNewsToDisplay(page) {
-    let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField,page));
+const getNewsToDisplay = async (page) => {
+    let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField), page)
     return retrievedNewsData;
-} 
+}
 
-let newsArray = await defaultNewsToDisplay();
+newsArray.push(await getNewsToDisplay(page));
 console.log(newsArray);
 
+//UI rendering related logics
+function renderUI(fetchedDataArrayIndex) {
+    newsArray[fetchedDataArrayIndex].hits.map((newsInfo, index) => {
 
-//static data here
-//let newsArray = data;
-//console.log(newsArray);
+        //create checkbox element for all newsObj
+        //let inputCheckBox = document.createElement('input'); would be used later for different logic scenarios
+        //inputCheckBox.setAttribute('type', 'checkbox');
+        //inputCheckBox.setAttribute('name', `${"checkbox" + index}`)
 
-//set number of Pages in searchResult
-numberOfPages.innerHTML = newsArray.nbPages;
-numberOfPages.style.marginLeft = "10px";
+        //initialize ul for each complete Object
+        let ul = document.createElement('ul');
+        ul.setAttribute('id', `${"newsObj" + index}`);
 
-//set the currentPage in the searchResult retrived
-currentPage.innerHTML = newsArray.page;
-currentPage.style.marginLeft = "10px";
+        const title = document.createElement('li');
+        title.innerHTML = `${newsInfo.title}`;
+        title.style.padding = "0.3rem";
 
-//nextPageLoad btn pressed
-nextPageLoadBtn.addEventListener('click', async () => {
-    console.log(`${currentPage.innerHTML + 1}`);
-    defaultNewsToDisplay(`${currentPage.innerHTML + 1}`);
-});
+        const url = document.createElement('li');
+        url.innerHTML = `<a href=${newsInfo.url} target="_blank">${newsInfo.url}</a>`;
+        url.style.padding = "0.3rem";
 
-//prevPageLoad btn pressed
-prevPageLoadBtn.addEventListener('click', () => {
-    console.log("prev button pressed");
-});
+        const author = document.createElement('li');
+        author.innerHTML = `Author : ${newsInfo.author}`;
+        author.style.padding = "0.3rem";
 
+        const date = document.createElement('li');
+        date.innerHTML = `CreatedDate : ${newsInfo.created_at}`;
+        date.style.padding = "0.3rem";
 
-const dynamicUlElements = newsArray.hits.map((newsInfo, index) => {
+        const points = document.createElement('li');
+        points.innerHTML = `Points : ${newsInfo.points}`;
+        points.style.padding = "0.3rem";
 
-    //create checkbox element for all newsObj
-    let inputCheckBox = document.createElement('input');
-    inputCheckBox.setAttribute('type','checkbox');
-    inputCheckBox.setAttribute('name',`${"checkbox" + index}`)
-
-    //initialize ul for each complete Object
-    let ul = document.createElement('ul');
-    ul.setAttribute('id', `${"newsObj" + index}`);
-
-    const title = document.createElement('li');
-    title.innerHTML = `${newsInfo.title}`;
-    title.style.padding = "0.3rem";
-
-    const url = document.createElement('li');
-    url.innerHTML = `<a href=${newsInfo.url} target="_blank">${newsInfo.url}</a>`;
-    url.style.padding = "0.3rem";
-
-    const author = document.createElement('li');
-    author.innerHTML = `Author : ${newsInfo.author}`;
-    author.style.padding = "0.3rem";
-
-    const date = document.createElement('li');
-    date.innerHTML = `CreatedDate : ${newsInfo.created_at}`;
-    date.style.padding = "0.3rem";
-
-    const points = document.createElement('li');
-    points.innerHTML = `Points : ${newsInfo.points}`;
-    points.style.padding = "0.3rem";
-
-    const num_of_comments = document.createElement('li');
-    num_of_comments.innerHTML = `Comments : ${newsInfo.num_comments}`;
-    num_of_comments.style.padding = "0.3rem";
+        const num_of_comments = document.createElement('li');
+        num_of_comments.innerHTML = `Comments : ${newsInfo.num_comments}`;
+        num_of_comments.style.padding = "0.3rem";
 
 
-    ul.append(inputCheckBox);
-    const valuesToAppendToUl = [title, url, author, date, points, num_of_comments];
-    valuesToAppendToUl.forEach(element => {
-        ul.append(element);
-    })
+        //ul.append(inputCheckBox); would be used later, for different logic scenarios
+        const valuesToAppendToUl = [title, url, author, date, points, num_of_comments];
+        valuesToAppendToUl.forEach(element => {
+            ul.append(element);
+        })
 
-    //setting ul attributes
-    ul.style.display = "grid";
-    ul.style.border = "1px solid black";
-    ul.style.listStyle = "none";
-    ul.style.padding = "1rem";
-    ul.style.margin = "2rem";
+        //setting ul attributes
+        ul.style.display = "grid";
+        ul.style.border = "1px solid black";
+        ul.style.listStyle = "none";
+        ul.style.padding = "1rem";
+        ul.style.margin = "2rem";
 
-    newsListContainer.appendChild(ul);
-    mainContainer.appendChild(newsListContainer);
+        newsListContainer.appendChild(ul);
+        mainContainer.appendChild(newsListContainer);
 
-    //return ul elements so as to target checkboxes and 
-    //perform operations on the data
-    return ul;
-});
+        //return ul elements so as to target checkboxes and 
+        //perform operations on the data
+        //return ul;
+    });
+}
 
-//on selectAllBtn Clicked
+renderUI(fetchedDataArrayIndex);
+
+/* //on selectAllBtn Clicked  //would be used later for different logic scenario
 selectAllBtn.addEventListener('click', () => {
     dynamicUlElements.forEach(ulElement => {
         let checkBoxElement = ulElement.querySelector('ul input[type=checkbox]');
@@ -153,7 +133,7 @@ selectAllBtn.addEventListener('click', () => {
     })
 });
 
-//on De-selectAllBtn Clicked
+//on De-selectAllBtn Clicked //would be used later for different logic scenario
 DeselectAllBtn.addEventListener('click', () => {
     dynamicUlElements.forEach(ulElement => {
         let checkBoxElement = ulElement.querySelector('ul input[type=checkbox]');
@@ -162,19 +142,97 @@ DeselectAllBtn.addEventListener('click', () => {
         //set deleteAll btn to visible
         deleteAll.style.display = "none";
     })
-});
+}); */
 
-//on-deleteAll btn clicked
-deleteAllBtn.addEventListener('click', () => {
-   
-});
+//on-deleteAll btn clicked //would be used later for different logic scenario
+/* deleteAllBtn.addEventListener('click', () => {
 
+}); */
 
-//on pageLoad function runs once with default value population
-//defaultNewsToDisplay();
 
 //on searchBtn click, run new functionCall
-submitBtn.addEventListener('click', () => {
-    //defaultNewsToDisplay();
+submitBtn.addEventListener('click', async () => {
+    //In searching for a new newsFeed,
+    //first clear the contents of the array
+    newsArray = [];
+
+    let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField), page)
+    console.log(retrievedNewsData);
+    newsArray.push(await retrievedNewsData);
+    renderUI(fetchedDataArrayIndex);
 });
+
+
+//pagination related logics 
+let paginationData = {
+    currentPage: currentPage,
+    numberOfPages: numberOfPages,
+    page: page,
+    fetchedDataArrayIndex: fetchedDataArrayIndex,
+    currentNewsFeedTotal: currentNewsFeedTotal,
+    incrementPageValue() {
+        this.page++;
+    },
+    incrementFetchedDataArrayIndexValue() {
+        this.fetchedDataArrayIndex++;
+    },
+    getNumberOfPagesInRetrievedData() {
+        this.numberOfPages.innerHTML = newsArray[fetchedDataArrayIndex].nbPages;
+        this.numberOfPages.style.marginLeft = "10px";
+    },
+    setCurrentPage() {
+            this.currentPage.innerHTML = newsArray[fetchedDataArrayIndex].page;
+            this.currentPage.style.marginLeft = "10px";
+    },
+    setCurrentNewsFeedTotal(){
+        this.currentNewsFeedTotal.innerHTML = newsArray[fetchedDataArrayIndex].hitsPerPage;
+    }
+}
+
+//set the total number of newsFeed currently displayed on screen
+paginationData.setCurrentNewsFeedTotal();
+
+//set number of pages in retrieved Data
+paginationData.getNumberOfPagesInRetrievedData();
+
+//set currentPage Number
+paginationData.setCurrentPage();
+
+//nextPageLoad btn pressed
+nextPageLoadBtn.addEventListener('click', async () => {
+    //call obj Fxn to Increase pageValue
+    paginationData.incrementPageValue();
+
+    //set the currentpage Number
+    paginationData.setCurrentPage();
+
+    //on nextBtn pressed we fetch a new data into the array
+    //of which we would need to display in the browser, and hence
+    //this sets the arrayIndex to loop through to populate our data
+    paginationData.incrementFetchedDataArrayIndexValue();
+
+    //clear the contents of the array before pushing new 
+    //elements to it. This is bcos we're not focusing on storing
+    //all fetched data in the array and traverse it later.
+    //But simply fetching and displaying data
+    //[NOTE]: If you have a different acceptance criteria then you
+    //can comment this line out, and the newly fetched data will be appended
+    //to the existing data on the UI
+    /* newsArray = [];
+    console.log(newsArray);  */
+
+    //pass the new PageNumber to the async method to fetch data with the newPageValue
+    newsArray.push(await getNewsToDisplay(paginationData.page));
+    console.log(newsArray);
+
+    renderUI(paginationData.fetchedDataArrayIndex);
+});
+
+//prevPageLoad btn pressed
+prevPageLoadBtn.addEventListener('click', () => {
+    console.log("prev button pressed");
+});
+
+
+
 

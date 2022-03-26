@@ -1,7 +1,7 @@
 import {baseUrl} from './constants.js';
 
 const fetchHackerNews_data = async (inputSearchValue, page = 0) => {
-    console.log(`${inputSearchValue} and page ${page}`);
+    console.log(`${inputSearchValue} and page= ${page}`);
     try{
     let response = await fetch(`${baseUrl}?query=${inputSearchValue}&page=${page}`);
     if(response.ok){
