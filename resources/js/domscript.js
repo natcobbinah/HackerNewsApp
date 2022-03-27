@@ -32,6 +32,11 @@ let newsArray = [];
 //see the fxn below, to see how data is handled
 let fetchedDataArrayIndex = 0;
 
+//fxn clearArrayData
+async function clearArrayContent() {
+    await newsArray.pop();
+}
+
 /* //on tripleGridView icon pressed //would be used later for different logic scenario
 tripleGridView.addEventListener('click', () => {
     singleLineView.style.backgroundColor = "#353535";
@@ -62,6 +67,8 @@ console.log(newsArray);
 
 //UI rendering related logics
 function renderUI(fetchedDataArrayIndex) {
+    console.log("fetchedArrayIndex = " + fetchedDataArrayIndex);
+
     newsArray[fetchedDataArrayIndex].hits.map((newsInfo, index) => {
 
         //create checkbox element for all newsObj
@@ -70,8 +77,10 @@ function renderUI(fetchedDataArrayIndex) {
         //inputCheckBox.setAttribute('name', `${"checkbox" + index}`)
 
         //initialize ul for each complete Object
-        let ul = document.createElement('ul');
-        ul.setAttribute('id', `${"newsObj" + index}`);
+        /* let ul = document.createElement('ul');
+        ul.setAttribute('id', `${"newsObj" + index}`);  not used anymore as
+        ul elements are made in html, and have li contents rather inserted*/
+        let ul = document.getElementById(`${"newsObj" + index}`);
 
         const title = document.createElement('li');
         title.innerHTML = `${newsInfo.title}`;
@@ -156,6 +165,15 @@ submitBtn.addEventListener('click', async () => {
     //first clear the contents of the array
     newsArray = [];
 
+    //clear all [li elements in ul]
+    clearUlListContent();
+
+    //reset pagination pageValue, when a new search is made
+    paginationData.resetPageValue();
+
+    //reset fetchedArrayIndexValue, when a new search is made
+    paginationData.resetFetchedArrayIndexValue();
+
     let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField), page)
     console.log(retrievedNewsData);
     newsArray.push(await retrievedNewsData);
@@ -181,11 +199,17 @@ let paginationData = {
         this.numberOfPages.style.marginLeft = "10px";
     },
     setCurrentPage() {
-            this.currentPage.innerHTML = newsArray[fetchedDataArrayIndex].page;
-            this.currentPage.style.marginLeft = "10px";
+        this.currentPage.innerHTML = this.page;
+        this.currentPage.style.marginLeft = "10px";
     },
-    setCurrentNewsFeedTotal(){
+    setCurrentNewsFeedTotal() {
         this.currentNewsFeedTotal.innerHTML = newsArray[fetchedDataArrayIndex].hitsPerPage;
+    },
+    resetPageValue(){
+        this.page = 0;
+    },
+    resetFetchedArrayIndexValue(){
+        this.fetchedDataArrayIndex = 0;
     }
 }
 
@@ -202,6 +226,7 @@ paginationData.setCurrentPage();
 nextPageLoadBtn.addEventListener('click', async () => {
     //call obj Fxn to Increase pageValue
     paginationData.incrementPageValue();
+    console.log("new page = " + paginationData.page);
 
     //set the currentpage Number
     paginationData.setCurrentPage();
@@ -211,15 +236,8 @@ nextPageLoadBtn.addEventListener('click', async () => {
     //this sets the arrayIndex to loop through to populate our data
     paginationData.incrementFetchedDataArrayIndexValue();
 
-    //clear the contents of the array before pushing new 
-    //elements to it. This is bcos we're not focusing on storing
-    //all fetched data in the array and traverse it later.
-    //But simply fetching and displaying data
-    //[NOTE]: If you have a different acceptance criteria then you
-    //can comment this line out, and the newly fetched data will be appended
-    //to the existing data on the UI
-    /* newsArray = [];
-    console.log(newsArray);  */
+    //clear all [li elements in ul]
+    clearUlListContent();
 
     //pass the new PageNumber to the async method to fetch data with the newPageValue
     newsArray.push(await getNewsToDisplay(paginationData.page));
@@ -227,6 +245,15 @@ nextPageLoadBtn.addEventListener('click', async () => {
 
     renderUI(paginationData.fetchedDataArrayIndex);
 });
+
+//called to clear existing ul li (content)
+// so as to get new data to be fetched and inserted
+const clearUlListContent = () => {
+    for (let index = 0; index <= 19; index++) {
+        let ul = document.getElementById(`${"newsObj" + index}`);
+        ul.innerHTML = "";
+    }
+}
 
 //prevPageLoad btn pressed
 prevPageLoadBtn.addEventListener('click', () => {
