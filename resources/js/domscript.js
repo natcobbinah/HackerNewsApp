@@ -5,11 +5,12 @@ let searchField = document.querySelector('input[type=search]');
 let submitBtn = document.querySelector('input[type=submit]');
 let searchIcon = document.querySelector('header #search-box ul .search-icon');
 let searchFieldContainer = document.querySelector('header #search-box ul .search-container');
-let singleLineView = document.querySelector('header nav .toggle-layout-buttons .grid-lines');
-let tripleGridView = document.querySelector('header nav .toggle-layout-buttons .grid-boxes');
+//let singleLineView = document.querySelector('#show-deletebtn ul .grid-lines');
+//let tripleGridView = document.querySelector('#show-deletebtn ul .grid-boxes');
 let mainContainer = document.querySelector('main');
+let newsListGridContainer = document.querySelector('main #newsList');
 //To create dynamic ul elements in main div
-let newsListContainer = document.querySelector('main #newsList');
+let newsListContainer = document.getElementById('newsList');
 let checkBoxContainer = document.querySelector('main .checkBoxContainer');
 let newsDeleteBtnContainer = document.querySelector('main .newsDeleteBtnContainer');
 let selectAllBtn = document.querySelector('#show-deletebtn #selectAll');
@@ -32,30 +33,24 @@ let newsArray = [];
 //see the fxn below, to see how data is handled
 let fetchedDataArrayIndex = 0;
 
-//fxn clearArrayData
-async function clearArrayContent() {
-    await newsArray.pop();
-}
-
-/* //on tripleGridView icon pressed //would be used later for different logic scenario
-tripleGridView.addEventListener('click', () => {
-    singleLineView.style.backgroundColor = "#353535";
+//on tripleGridView icon pressed //would be used later for different logic scenario
+/* tripleGridView.addEventListener('click', () => {
+    singleLineView.style.backgroundColor = "#fff";
     tripleGridView.style.backgroundColor = 'red';
 
     //change mainContainer layout to gridLayout
-    mainContainer.style.gridTemplateAreas = "left center right";
-    newsListContainer.style.gridArea = "left";
 });
 
 //on singleLineView icon pressed
 singleLineView.addEventListener('click', () => {
-    tripleGridView.style.backgroundColor = "#353535";
+    tripleGridView.style.backgroundColor = "#fff";
     singleLineView.style.backgroundColor = "red";
 
     //change mainContainer layout to singleViewLayout
-    mainContainer.style.gridColumn = "1 / span 12";
-});
- */
+   
+}); */
+
+
 //from apiendpoints
 const getNewsToDisplay = async (page) => {
     let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField), page)
@@ -87,7 +82,7 @@ function renderUI(fetchedDataArrayIndex) {
         title.style.padding = "0.3rem";
 
         const url = document.createElement('li');
-        url.innerHTML = `<a href=${newsInfo.url} target="_blank">${newsInfo.url}</a>`;
+        url.innerHTML = `<a href=${newsInfo.url} target="_blank">Read news</a>`;
         url.style.padding = "0.3rem";
 
         const author = document.createElement('li');
@@ -114,7 +109,6 @@ function renderUI(fetchedDataArrayIndex) {
         })
 
         //setting ul attributes
-        ul.style.display = "grid";
         ul.style.border = "1px solid black";
         ul.style.listStyle = "none";
         ul.style.padding = "1rem";
@@ -174,6 +168,9 @@ submitBtn.addEventListener('click', async () => {
     //reset fetchedArrayIndexValue, when a new search is made
     paginationData.resetFetchedArrayIndexValue();
 
+    //reset currentPage innerHTML value
+    paginationData.resetCurrentPageInnerHTMLValue();
+
     let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField), page)
     console.log(retrievedNewsData);
     newsArray.push(await retrievedNewsData);
@@ -189,10 +186,29 @@ let paginationData = {
     fetchedDataArrayIndex: fetchedDataArrayIndex,
     currentNewsFeedTotal: currentNewsFeedTotal,
     incrementPageValue() {
-        this.page++;
+        //current pageSize is 50 from apiEndpoints, and hence
+        //restricted to that range
+        if (this.page <= 59) {
+            this.page++;
+        }
+    },
+    decrementPageValue() {
+        //page number to be fetched cannot be negative
+        if (this.page !== 0) {
+            this.page--;
+        }
     },
     incrementFetchedDataArrayIndexValue() {
-        this.fetchedDataArrayIndex++;
+        //currentPage size retrieved is 50 and hence would not increase after that range
+        if (this.fetchedDataArrayIndex <= 49) {
+            this.fetchedDataArrayIndex++;
+        }
+    },
+    decrementFetchedDataArrayIndexValue() {
+        //fetched pageValue cannot be less than 0
+        if (this.fetchedDataArrayIndex !== 0) {
+            this.fetchedDataArrayIndex--;
+        }
     },
     getNumberOfPagesInRetrievedData() {
         this.numberOfPages.innerHTML = newsArray[fetchedDataArrayIndex].nbPages;
@@ -205,11 +221,14 @@ let paginationData = {
     setCurrentNewsFeedTotal() {
         this.currentNewsFeedTotal.innerHTML = newsArray[fetchedDataArrayIndex].hitsPerPage;
     },
-    resetPageValue(){
+    resetPageValue() {
         this.page = 0;
     },
-    resetFetchedArrayIndexValue(){
+    resetFetchedArrayIndexValue() {
         this.fetchedDataArrayIndex = 0;
+    },
+    resetCurrentPageInnerHTMLValue() {
+        this.currentPage.innerHTML = this.page;
     }
 }
 
@@ -256,8 +275,27 @@ const clearUlListContent = () => {
 }
 
 //prevPageLoad btn pressed
-prevPageLoadBtn.addEventListener('click', () => {
-    console.log("prev button pressed");
+prevPageLoadBtn.addEventListener('click', async () => {
+    //call obj Fxn to decrease pageValue
+    paginationData.decrementPageValue();
+    console.log("new page = " + paginationData.page);
+
+    //set the currentpage Number
+    paginationData.setCurrentPage();
+
+    //on nextBtn pressed we fetch a new data into the array
+    //of which we would need to display in the browser, and hence
+    //this sets the arrayIndex to loop through to populate our data
+    paginationData.decrementFetchedDataArrayIndexValue();
+
+    //clear all [li elements in ul]
+    clearUlListContent();
+
+    //pass the new PageNumber to the async method to fetch data with the newPageValue
+    newsArray.push(await getNewsToDisplay(paginationData.page));
+    console.log(newsArray);
+
+    renderUI(paginationData.fetchedDataArrayIndex);
 });
 
 

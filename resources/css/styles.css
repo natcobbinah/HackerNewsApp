@@ -26,7 +26,7 @@ header #search-box ul{
    list-style-type: none;
 }
 
-  header #search-box ul li:first-child{
+header #search-box ul li:first-child{
     color: #fff;
 }  
 
@@ -79,28 +79,36 @@ header nav .toggle-layout-buttons li:nth-child(3){
 #show-deletebtn{
     display: flex;
     justify-content: space-between;
-    margin: 0.2rem;
     grid-column: 1 / span 12;
     background-color: #d8d8d8;
+    border: 1px solid black;
+    align-items: center;
 }
 
-#show-deletebtn #selectAll,
-#show-deletebtn #de-selectAll{
-    padding: 0.7rem;
+#show-deletebtn ul{
+    display: flex;
+    list-style-type: none;
 }
 
-#show-deletebtn #deleteAll{
-    display: none;
-}
+#show-deletebtn ul li{
+    padding-right: 1rem;
+    padding-left: 1rem;
+    border: 1px solid black;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+} 
+
 
 /*partition the main divs when continuing*/
 
 main{
     grid-column: 1 / span 12;
-    border: 1px solid black;
     background-color: #d8d8d8;
 }
 
+main #newsList{
+    grid-column: 1 / span 12;
+}
 
 #show-pagination{
     display: flex;
