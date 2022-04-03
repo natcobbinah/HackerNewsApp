@@ -16,6 +16,13 @@ let newsDeleteBtnContainer = document.querySelector('main .newsDeleteBtnContaine
 let selectAllBtn = document.querySelector('#show-deletebtn #selectAll');
 let DeselectAllBtn = document.querySelector('#show-deletebtn #de-selectAll');
 let deleteAllBtn = document.querySelector('#show-deletebtn #deleteAll');
+//ulElements to set GIF image on
+let ulGifElement = document.getElementById('newsList').getElementsByTagName('ul')
+
+
+//filtering elements
+let sortByElement = document.getElementById('filter-options');
+
 //pagination text and btns
 let numberOfPages = document.querySelector('#show-pagination p .nofPages');
 let currentPage = document.querySelector('#show-pagination p .currentPage');
@@ -32,6 +39,9 @@ let newsArray = [];
 //we use this index in the loop depending on the value of fetchedDataArrayIndex
 //see the fxn below, to see how data is handled
 let fetchedDataArrayIndex = 0;
+
+//variable passed to api to sortNews fetched
+let tags = "";
 
 //on tripleGridView icon pressed //would be used later for different logic scenario
 /* tripleGridView.addEventListener('click', () => {
@@ -60,6 +70,20 @@ const getNewsToDisplay = async (page) => {
 newsArray.push(await getNewsToDisplay(page));
 console.log(newsArray);
 
+//fxn to clearLoading gif for News
+function clearloadingGIF(){
+    for(let i = 0; i < ulGifElement.length - 1; i++){
+        ulGifElement[i].style.backgroundImage = "url()";
+    }
+} 
+
+//fxn to setLoading gif for News
+function setloadingGIF(){
+    for(let i = 0; i < ulGifElement.length - 1; i++){
+        ulGifElement[i].style.backgroundImage = "url('../images/loading.gif')";
+    }
+} 
+
 //UI rendering related logics
 function renderUI(fetchedDataArrayIndex) {
     console.log("fetchedArrayIndex = " + fetchedDataArrayIndex);
@@ -77,34 +101,31 @@ function renderUI(fetchedDataArrayIndex) {
         ul elements are made in html, and have li contents rather inserted*/
         let ul = document.getElementById(`${"newsObj" + index}`);
 
+        //clear background gifImage
+        clearloadingGIF();
+
         const title = document.createElement('li');
         title.innerHTML = `${newsInfo.title}`;
-        title.style.padding = "0.3rem";
 
         const url = document.createElement('li');
         url.innerHTML = `<a href=${newsInfo.url} target="_blank">Read news</a>`;
-        url.style.padding = "0.3rem";
 
         const author = document.createElement('li');
         author.innerHTML = `Author : ${newsInfo.author}`;
-        author.style.padding = "0.3rem";
 
         const date = document.createElement('li');
         date.innerHTML = `CreatedDate : ${newsInfo.created_at}`;
-        date.style.padding = "0.3rem";
 
         const points = document.createElement('li');
         points.innerHTML = `Points : ${newsInfo.points}`;
-        points.style.padding = "0.3rem";
 
         const num_of_comments = document.createElement('li');
         num_of_comments.innerHTML = `Comments : ${newsInfo.num_comments}`;
-        num_of_comments.style.padding = "0.3rem";
-
 
         //ul.append(inputCheckBox); would be used later, for different logic scenarios
         const valuesToAppendToUl = [title, url, author, date, points, num_of_comments];
         valuesToAppendToUl.forEach(element => {
+            element.style.padding = "0.3rem";
             ul.append(element);
         })
 
@@ -188,7 +209,7 @@ let paginationData = {
     incrementPageValue() {
         //current pageSize is 50 from apiEndpoints, and hence
         //restricted to that range
-        if (this.page <= 59) {
+        if (this.page <= 49) {
             this.page++;
         }
     },
@@ -298,6 +319,30 @@ prevPageLoadBtn.addEventListener('click', async () => {
     renderUI(paginationData.fetchedDataArrayIndex);
 });
 
+//selectElement selected to filter fetchedNews
+sortByElement.addEventListener('change', async (event) => {
+    console.log("&tag=" + event.target.value);
+    //In searching for a new newsFeed,
+    //first clear the contents of the array
+    newsArray = [];
+
+    //clear all [li elements in ul]
+    clearUlListContent();
+
+    //reset pagination pageValue, when a new search is made
+    paginationData.resetPageValue();
+
+    //reset fetchedArrayIndexValue, when a new search is made
+    paginationData.resetFetchedArrayIndexValue();
+
+    //reset currentPage innerHTML value
+    paginationData.resetCurrentPageInnerHTMLValue();
+
+    let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField), page, event.target.value)
+    console.log(retrievedNewsData);
+    newsArray.push(await retrievedNewsData);
+    renderUI(fetchedDataArrayIndex);
+});
 
 
 

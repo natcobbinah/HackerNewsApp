@@ -65,20 +65,9 @@ header nav .toggle-layout-buttons li:nth-child(3){
 
 /*-----------------header ends here-----------------------*/
 
-#sortBy{
-    font-size: 1.5rem;
-    color: #fff;
-}
-
-#sortBy #filter-options{
-    font-size: 1.5rem;
-    border-radius: 3rem;
-    border: none;
-}
-
 #show-deletebtn{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     grid-column: 1 / span 12;
     background-color: #d8d8d8;
     border: 1px solid black;
@@ -108,6 +97,15 @@ main{
 
 main #newsList{
     grid-column: 1 / span 12;
+}
+
+main #newsList ul{
+  border: 1px solid black;
+  padding: 6rem;
+  background-image: url('../images/loading.gif');
+  margin: 2rem;
+  background-repeat: no-repeat;
+  background-color: #fff;
 }
 
 #show-pagination{
