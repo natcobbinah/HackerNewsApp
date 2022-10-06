@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HackerNewsApp</title>
     <script src="https://kit.fontawesome.com/48bf10ba77.js" crossorigin="anonymous"></script>
-    <script type="module" src="./resources/js/domscript.js" defer></script>
-    <link href="./resources/css/styles.css" rel="stylesheet">
+    <!-- <script type="module" src="./resources/js/domscript.js" defer></script>
+    <link href="./resources/css/styles.css" rel="stylesheet"> -->
 </head>
 
 <body>
@@ -21,41 +21,108 @@
                         <img src="./resources/images/hackerNewsLogo.svg" alt="hackerNewsLogo">
                     </li>
                     <li class="search-container">
-                        <input type="search" id="searchfield" name="searchValue" placeholder="Search">
+                        <input type="search" id="searchfield" name="searchValue"
+                            placeholder="Search by itemID / username / generalSearch / generalSearch with tags and  filters/ tags search only">
                         <input type="submit" value="Search">
                     </li>
                 </ul>
             </div>
         </header>
 
-        <div id="show-deletebtn">
-            <!-- <div> would be used later for different logic scenario
-                <button id="selectAll" type="button"><i class="fa-solid fa-circle-check"></i>Select All</button>
-                <button id="de-selectAll" type="button"><i class="fa-solid fa-circle-minus"></i>De-Select All</button>
-            </div>
-            <button id="deleteAll" type="button"><i class="fa-solid fa-trash-can"></i>Delete-All</button> -->
-            <!--
-               commented out for now, but would be used
-to display content in singleView or gridView later on
-a button click  
-                <ul class="toggle-layout-buttons">
-                <li class="grid-lines"><i class="fa-solid fa-grip-lines"></i></li>
-                <li class="grid-boxes"><i class="fa-solid fa-table-cells"></i></li>
-            </ul> -->
-
-            <div id="sortBy">
-                <p>
-                    <label for="filter-options">Search On</label>
-                    <select name="sortby" id="filter-options">
-                        <option value="story">Story</option>
-                        <option value="front_page">FrontPage/Last 24h</option>
-                    </select>
-                </p>
-            </div> 
+        <div id="sortBy">
+            <p>
+                <label for="filter-options">Tags</label>
+                <button class="tag-options">Select Tags</button>
+            </p>
+            <p>
+                <label for="numericFilter">Numeric Filter</label>
+                <button class="numericfilter-options">Select numericFilters</button>
+            </p>
         </div>
 
+        <!--Tags popUp dialog-->
+        <dialog id="tagsDialog">
+            <form method="dialog">
+                <p>
+                    <label for="tags">Available Tags:</label>
+                </p>
+                <select id="selectedTags" size="7" name="tagFilters" multiple>
+                    <option></option>
+                    <option value="story">Story</option>
+                    <option value="comment">Comment</option>
+                    <option value="poll">Poll</option>
+                    <option value="pollopt">PollOpt</option>
+                    <option value="show_hn">Show HN</option>
+                    <option value="ask_hn">Ask HN</option>
+                    <option value="front_page">Front Page</option>
+                </select>
+
+                <div>
+                    <button id="cancel" type="reset">Cancel</button>
+                    <button id="confirmTagsSelected" type="submit">Confirm</button>
+                </div>
+            </form>
+        </dialog>
+        <!--Tags popUp dialog ends here-->
+
+        <!--NumericFilter popUp dialog-->
+        <dialog id="numericFilterDialog">
+            <form method="dialog">
+                <p>
+                    <label for="tags">Available NumericFilters:</label>
+                </p>
+
+                <p>
+                    <label for="list">Points > :</label>
+                    <input id="pointsGt" type="range" list="pointsGreatherThan" value="0">
+                    <datalist id="pointsGreatherThan">
+                        <option value="0" label="0"></option>
+                        <option value="10"></option>
+                        <option value="20"></option>
+                        <option value="30"></option>
+                        <option value="40"></option>
+                        <option value="50"></option>
+                        <option value="60"></option>
+                        <option value="70"></option>
+                        <option value="80"></option>
+                        <option value="90"></option>
+                        <option value="100" label="100"></option>
+                    </datalist>
+                </p>
+
+                <p>
+                    <label>Points < :</label>
+                            <input id="pointsLt" type="range" list="pointsLessThan" value="0">
+                            <datalist id="pointsLessThan">
+                                <option value="0" label="0"></option>
+                                <option value="10"></option>
+                                <option value="20"></option>
+                                <option value="30"></option>
+                                <option value="40"></option>
+                                <option value="50"></option>
+                                <option value="60"></option>
+                                <option value="70"></option>
+                                <option value="80"></option>
+                                <option value="90"></option>
+                                <option value="100" label="100"></option>
+                            </datalist>
+                </p>
+
+                <p>
+                    <label for="createdAt">Created At :</label>
+                    <input id="createdAt" type="datetime-local" name="createdAtDate" />
+                </p>
+
+                <div>
+                    <button id="cancel" type="reset">Cancel</button>
+                    <button id="confirmNumericFilter" type="submit">Confirm</button>
+                </div>
+            </form>
+        </dialog>
+        <!--Tags NumericFilter dialog ends here-->
+
         <main>
-            <div class="checkBoxContainer"></div>
+            <!--  <div class="checkBoxContainer"></div> -->
             <div id="newsList">
                 <ul id="newsObj0"></ul>
                 <ul id="newsObj1"></ul>
@@ -78,7 +145,10 @@ a button click
                 <ul id="newsObj18"></ul>
                 <ul id="newsObj19"></ul>
             </div>
-            <div class="newsDeleteBtnContainer"></div>
+            <!--  <div class="newsDeleteBtnContainer"></div> -->
+            <div id="newsListByID">
+                <ul id="newsbyId"></ul>
+            </div>
         </main>
 
         <div id="show-pagination">
@@ -97,6 +167,7 @@ a button click
             <p>&copy; All Rights Reserved. NatCobbinah -2022</p>
         </footer>
     </div>
+    <script src="./dist/main.bundle.js"></script>
 </body>
 
 </html>

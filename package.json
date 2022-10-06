@@ -1,0 +1,27 @@
+{
+  "name": "hackernewsapp",
+  "version": "1.0.0",
+  "description": "This demo application showcases the use of HTML5, CSS3 and vanilla JS, without the use of frameworks, to create a dynamic newsFeed web application, interacting with hackerNewsApi\r and performing manipulations to data fetched.\r See it in action: https://hacker-news-app-sand.vercel.app/",
+  "main": "resources/js/domscript.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/natcobbinah/HackerNewsApp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/natcobbinah/HackerNewsApp/issues"
+  },
+  "homepage": "https://github.com/natcobbinah/HackerNewsApp#readme",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
+  }
+}

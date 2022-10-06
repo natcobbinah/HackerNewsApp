@@ -1,24 +1,18 @@
-import { fetchHackerNews_data } from './api_methods.js';
+//import { fetchHackerNews_data } from './api_methods.js';
 import { getSearchTextTerm } from '../modules/searchTextTerm.js';
+import css from '../css/styles.css';
+import { getItem, getUser, searchNews, searchNewsByDate } from './api_methods';
 
 let searchField = document.querySelector('input[type=search]');
 let submitBtn = document.querySelector('input[type=submit]');
-let searchIcon = document.querySelector('header #search-box ul .search-icon');
-let searchFieldContainer = document.querySelector('header #search-box ul .search-container');
-//let singleLineView = document.querySelector('#show-deletebtn ul .grid-lines');
-//let tripleGridView = document.querySelector('#show-deletebtn ul .grid-boxes');
+
 let mainContainer = document.querySelector('main');
-let newsListGridContainer = document.querySelector('main #newsList');
+
 //To create dynamic ul elements in main div
 let newsListContainer = document.getElementById('newsList');
-let checkBoxContainer = document.querySelector('main .checkBoxContainer');
-let newsDeleteBtnContainer = document.querySelector('main .newsDeleteBtnContainer');
-let selectAllBtn = document.querySelector('#show-deletebtn #selectAll');
-let DeselectAllBtn = document.querySelector('#show-deletebtn #de-selectAll');
-let deleteAllBtn = document.querySelector('#show-deletebtn #deleteAll');
-//ulElements to set GIF image on
-let ulGifElement = document.getElementById('newsList').getElementsByTagName('ul')
 
+//ulElements to set GIF image on
+let ulGifElement = document.getElementById('newsList').getElementsByTagName('ul');
 
 //filtering elements
 let sortByElement = document.getElementById('filter-options');
@@ -29,77 +23,230 @@ let currentPage = document.querySelector('#show-pagination p .currentPage');
 let currentNewsFeedTotal = document.querySelector('#show-pagination p .newsFeedCount')
 let prevPageLoadBtn = document.querySelector("#show-pagination .pageLoadBtns #prevPageLoadBtn");
 let nextPageLoadBtn = document.querySelector("#show-pagination .pageLoadBtns #nextPageLoadBtn");
-//starting value for pagination
+
+//on Tags select dialog
+const tagsDialogButton = document.querySelector("#sortBy p .tag-options");
+const cancelButton = document.querySelector("#tagsDialog #cancel");
+const dialog = document.getElementById("tagsDialog");
+const selectedTagEls = document.querySelector("#tagsDialog select");
+const tagValuesConfirmBtn = document.querySelector("#tagsDialog div #confirmTagsSelected");
+
+//on numericFilter select dialog
+const numericFilterDialogButton = document.querySelector("#sortBy p .numericfilter-options");
+const numericFiltercancelButton = document.querySelector("#numericFilterDialog #cancel");
+const numericFilterdialog = document.getElementById("numericFilterDialog");
+const numericFilterPointsGt = document.querySelector("#numericFilterDialog p #pointsGt");
+const numericFilterPointsLt = document.querySelector("#numericFilterDialog p #pointsLt");
+const numericFilterCreatedAtDate = document.querySelector("#numericFilterDialog  #createdAt");
+const numericFilterConfirmBtn = document.querySelector("#numericFilterDialog div #confirmNumericFilter");
+
 let page = 0;
 
-//store apiData to be fetched
-let newsArray = [];
+/* let newsToFetch = "redux";
+let tagsApplied = ["comment"];
+let numericFilters = "points < 50";
+searchNews(newsToFetch)(tagsApplied)(numericFilters)()
+    .then(data => renderUI(data))
+    .catch((error) => console.log(error)); */
 
-//Since on nextPage Press, new data is fetched into the array
-//we use this index in the loop depending on the value of fetchedDataArrayIndex
-//see the fxn below, to see how data is handled
-let fetchedDataArrayIndex = 0;
+//get Results from API-ENDPOINTS
+/* 
+let itemNo = 34;
 
-//variable passed to api to sortNews fetched
-let tags = "";
+getItem(itemNo)
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error));
 
-//on tripleGridView icon pressed //would be used later for different logic scenario
-/* tripleGridView.addEventListener('click', () => {
-    singleLineView.style.backgroundColor = "#fff";
-    tripleGridView.style.backgroundColor = 'red';
 
-    //change mainContainer layout to gridLayout
+let name = "patricktomas";
+getUser(name)
+.then((data) => console.log(data))
+.catch((error) => console.log(error));
+
+
+let newsToFetch = "redux";
+let tagsApplied = ["comment"];
+let numericFilters = "points > 50";
+searchNews(newsToFetch)(tagsApplied)(numericFilters)()
+    .then((data) => newsArray.push(data))
+    .then(newsfeed => renderUI(newsfeed))
+    .catch((error) => console.log(error));
+ */
+
+/* 
+let tagsAppliedToSearchByDate = ["comment"];
+let numeriFilterAppliedToDate = "04/09/2022 > 20:00";
+searchNewsByDate()(tagsAppliedToSearchByDate)(numeriFilterAppliedToDate)()
+.then((data) => console.log(data))
+.catch((error) => console.log(error)); */
+
+
+
+// tagsDialogButton button opens a modal dialog-------------------
+tagsDialogButton.addEventListener("click", () => {
+    dialog.showModal();
 });
 
-//on singleLineView icon pressed
-singleLineView.addEventListener('click', () => {
-    tripleGridView.style.backgroundColor = "#fff";
-    singleLineView.style.backgroundColor = "red";
+// Form cancel button closes the dialog box
+cancelButton.addEventListener("click", () => {
+    dialog.close();
+});
 
-    //change mainContainer layout to singleViewLayout
-   
-}); */
+tagValuesConfirmBtn.addEventListener("click", () => {
+    [...selectedTagEls.options].filter(option => option.selected)
+        .map(option => console.log(option.value))
+})
+//----------end of tags dialog functionality ---------------------
 
+// numericFilterDialogButton button opens a modal dialog-------------------
+numericFilterDialogButton.addEventListener("click", () => {
+    numericFilterdialog.showModal();
+});
 
-//from apiendpoints
-const getNewsToDisplay = async (page) => {
-    let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField), page)
-    return retrievedNewsData;
-}
+// Form cancel button closes the dialog box
+numericFiltercancelButton.addEventListener("click", () => {
+    numericFilterdialog.close();
+});
 
-newsArray.push(await getNewsToDisplay(page));
-console.log(newsArray);
+numericFilterConfirmBtn.addEventListener("click", () => {
+    console.log(numericFilterPointsGt.value);
+    console.log(numericFilterPointsLt.value);
+    console.log(numericFilterCreatedAtDate.value);
+})
+
+//----------end of tags dialog functionality ---------------------
+
 
 //fxn to clearLoading gif for News
-function clearloadingGIF(){
-    for(let i = 0; i < ulGifElement.length - 1; i++){
+function clearloadingGIF() {
+    for (let i = 0; i < ulGifElement.length - 1; i++) {
         ulGifElement[i].style.backgroundImage = "url()";
     }
-} 
+}
 
 //fxn to setLoading gif for News
-function setloadingGIF(){
-    for(let i = 0; i < ulGifElement.length - 1; i++){
+function setloadingGIF() {
+    for (let i = 0; i < ulGifElement.length - 1; i++) {
         ulGifElement[i].style.backgroundImage = "url('../images/loading.gif')";
     }
-} 
+}
+
+const fetchNewsHandler = (paginationData) => {
+    console.log("page = " + paginationData.page)
+    if (Number(searchField.value)) {
+        console.log("call getItem fxn")
+        getItem(searchField.value)
+            .then((data) => renderUI_fetchByID(data))
+            .catch((error) => console.log(error));
+    } else if ((numericFilterPointsGt.value > 0 ||
+        numericFilterPointsLt.value > 0) && numericFilterCreatedAtDate.value != "" && (selectedTagEls.options)) {
+        console.log("call searchNewsByDate fxn")
+
+        let tagsAppliedToSearchByDate = [].push(selectedTagEls.options);
+        searchNewsByDate()(tagsAppliedToSearchByDate)(numericFilterCreatedAtDate.value)(paginationData.page)
+            .then((data) => renderUI(data))
+            .catch((error) => console.log(error));
+    } else if (typeof searchField.value === 'string' && (numericFilterPointsGt.value > 0 ||
+        numericFilterPointsLt.value > 0) && (selectedTagEls.options)) {
+        console.log("call searchNews fxn")
+
+        let tagsApplied = [].push(selectedTagEls.options);
+        let numericFilters = numericFilterPointsGt ? `points > ${numericFilterPointsGt}` : `points < ${numericFilterPointsLt}`;
+        searchNews(searchField.value)(tagsApplied)(numericFilters)(paginationData.page)
+            .then(data => renderUI(data))
+            .catch((error) => console.log(error));
+    } else if (typeof searchField.value === 'string') {
+        console.log("call searchNews fxn only String")
+        searchNews(searchField.value)()()(paginationData.page)
+            .then(data => renderUI(data))
+            .catch((error) => console.log(error));
+    } else {
+        console.log("call searchNews fxn last else")
+        searchNews(searchField.value)()()(paginationData.page)
+            .then(data => renderUI(data))
+            .catch((error) => console.log(error));
+    }
+}
+
+//empty display boxes
+const hideDisplayDivs = () => {
+    for (let i = 1; i <= 19; i++) {
+        let ul = document.getElementById(`${"newsObj" + i}`);
+        ul.style.display = "none";
+    }
+}
+
+const showDisplayDivs = () => {
+    for (let i = 0; i <= 19; i++) {
+        let ul = document.getElementById(`${"newsObj" + i}`);
+        ul.style.display = "block";
+    }
+}
 
 //UI rendering related logics
-function renderUI(fetchedDataArrayIndex) {
-    console.log("fetchedArrayIndex = " + fetchedDataArrayIndex);
+const renderUI_fetchByID = (data) => {
+    console.log(data)
 
-    newsArray[fetchedDataArrayIndex].hits.map((newsInfo, index) => {
+    hideDisplayDivs();
 
-        //create checkbox element for all newsObj
-        //let inputCheckBox = document.createElement('input'); would be used later for different logic scenarios
-        //inputCheckBox.setAttribute('type', 'checkbox');
-        //inputCheckBox.setAttribute('name', `${"checkbox" + index}`)
+    let ul = document.getElementById("newsObj0");
+    //clear existing ul data
+    ul.innerHTML = '';
 
-        //initialize ul for each complete Object
-        /* let ul = document.createElement('ul');
-        ul.setAttribute('id', `${"newsObj" + index}`);  not used anymore as
-        ul elements are made in html, and have li contents rather inserted*/
+    //clear background gifImage
+    clearloadingGIF();
+
+    const newsId = document.createElement('li');
+    newsId.innerHTML = `ID:  ${data.newsId}`;
+
+    const title = document.createElement('li');
+    title.innerHTML = `Title: ${data.title ? data.title : "Comment"}`;
+
+    const author = document.createElement('li');
+    author.innerHTML = `Author: ${data.author}`;
+
+    const searchUrl = document.createElement('li');
+    searchUrl.innerHTML = `Link: <a href=${data.url} target="_blank">Read news</a>`;
+
+    const newsText = document.createElement('li');
+    data.type == "comment" ?
+        newsText.innerHTML = `${data.text}`
+        :
+        "";
+
+    const createdAt = document.createElement('li');
+    createdAt.innerHTML = `Created At: ${data.created_at}`;
+
+    //setting ul attributes
+    ul.style.border = "1px solid black";
+    ul.style.listStyle = "none";
+    ul.style.padding = "1rem";
+    ul.style.margin = "7rem";
+
+    const valuesToAppendToUl = [title, newsId, author, searchUrl, newsText, createdAt];
+    valuesToAppendToUl.forEach(element => {
+        element.style.padding = "0.3rem";
+        ul.append(element);
+    })
+
+    newsListContainer.appendChild(ul);
+    mainContainer.appendChild(newsListContainer);
+}
+
+const renderUI = (data) => {
+    console.log(data)
+
+    //access pagination Information in fetched data
+    paginationData.getNumberOfPagesInRetrievedData(data);
+    paginationData.setCurrentNewsFeedTotal(data)
+
+    showDisplayDivs();
+
+    data.hits.map((newsInfo, index) => {
+
         let ul = document.getElementById(`${"newsObj" + index}`);
+        //clear existing ul data
+        ul.innerHTML = '';
 
         //clear background gifImage
         clearloadingGIF();
@@ -137,75 +284,16 @@ function renderUI(fetchedDataArrayIndex) {
 
         newsListContainer.appendChild(ul);
         mainContainer.appendChild(newsListContainer);
-
-        //return ul elements so as to target checkboxes and 
-        //perform operations on the data
-        //return ul;
     });
 }
-
-renderUI(fetchedDataArrayIndex);
-
-/* //on selectAllBtn Clicked  //would be used later for different logic scenario
-selectAllBtn.addEventListener('click', () => {
-    dynamicUlElements.forEach(ulElement => {
-        let checkBoxElement = ulElement.querySelector('ul input[type=checkbox]');
-        checkBoxElement.checked = true;
-
-        //set deleteAll btn to visible
-        deleteAll.style.display = "block";
-    })
-});
-
-//on De-selectAllBtn Clicked //would be used later for different logic scenario
-DeselectAllBtn.addEventListener('click', () => {
-    dynamicUlElements.forEach(ulElement => {
-        let checkBoxElement = ulElement.querySelector('ul input[type=checkbox]');
-        checkBoxElement.checked = false;
-
-        //set deleteAll btn to visible
-        deleteAll.style.display = "none";
-    })
-}); */
-
-//on-deleteAll btn clicked //would be used later for different logic scenario
-/* deleteAllBtn.addEventListener('click', () => {
-
-}); */
-
-
-//on searchBtn click, run new functionCall
-submitBtn.addEventListener('click', async () => {
-    //In searching for a new newsFeed,
-    //first clear the contents of the array
-    newsArray = [];
-
-    //clear all [li elements in ul]
-    clearUlListContent();
-
-    //reset pagination pageValue, when a new search is made
-    paginationData.resetPageValue();
-
-    //reset fetchedArrayIndexValue, when a new search is made
-    paginationData.resetFetchedArrayIndexValue();
-
-    //reset currentPage innerHTML value
-    paginationData.resetCurrentPageInnerHTMLValue();
-
-    let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField), page)
-    console.log(retrievedNewsData);
-    newsArray.push(await retrievedNewsData);
-    renderUI(fetchedDataArrayIndex);
-});
 
 
 //pagination related logics 
 let paginationData = {
-    currentPage: currentPage,
-    numberOfPages: numberOfPages,
+    currentPage,
+    numberOfPages,
     page: page,
-    fetchedDataArrayIndex: fetchedDataArrayIndex,
-    currentNewsFeedTotal: currentNewsFeedTotal,
+    currentNewsFeedTotal,
     incrementPageValue() {
         //current pageSize is 50 from apiEndpoints, and hence
         //restricted to that range
@@ -219,72 +307,24 @@ let paginationData = {
             this.page--;
         }
     },
-    incrementFetchedDataArrayIndexValue() {
-        //currentPage size retrieved is 50 and hence would not increase after that range
-        if (this.fetchedDataArrayIndex <= 49) {
-            this.fetchedDataArrayIndex++;
-        }
-    },
-    decrementFetchedDataArrayIndexValue() {
-        //fetched pageValue cannot be less than 0
-        if (this.fetchedDataArrayIndex !== 0) {
-            this.fetchedDataArrayIndex--;
-        }
-    },
-    getNumberOfPagesInRetrievedData() {
-        this.numberOfPages.innerHTML = newsArray[fetchedDataArrayIndex].nbPages;
+    getNumberOfPagesInRetrievedData(data) {
+        this.numberOfPages.innerHTML = data.nbPages;
         this.numberOfPages.style.marginLeft = "10px";
     },
     setCurrentPage() {
         this.currentPage.innerHTML = this.page;
         this.currentPage.style.marginLeft = "10px";
     },
-    setCurrentNewsFeedTotal() {
-        this.currentNewsFeedTotal.innerHTML = newsArray[fetchedDataArrayIndex].hitsPerPage;
+    setCurrentNewsFeedTotal(data) {
+        this.currentNewsFeedTotal.innerHTML = data.hitsPerPage;
     },
     resetPageValue() {
         this.page = 0;
-    },
-    resetFetchedArrayIndexValue() {
-        this.fetchedDataArrayIndex = 0;
     },
     resetCurrentPageInnerHTMLValue() {
         this.currentPage.innerHTML = this.page;
     }
 }
-
-//set the total number of newsFeed currently displayed on screen
-paginationData.setCurrentNewsFeedTotal();
-
-//set number of pages in retrieved Data
-paginationData.getNumberOfPagesInRetrievedData();
-
-//set currentPage Number
-paginationData.setCurrentPage();
-
-//nextPageLoad btn pressed
-nextPageLoadBtn.addEventListener('click', async () => {
-    //call obj Fxn to Increase pageValue
-    paginationData.incrementPageValue();
-    console.log("new page = " + paginationData.page);
-
-    //set the currentpage Number
-    paginationData.setCurrentPage();
-
-    //on nextBtn pressed we fetch a new data into the array
-    //of which we would need to display in the browser, and hence
-    //this sets the arrayIndex to loop through to populate our data
-    paginationData.incrementFetchedDataArrayIndexValue();
-
-    //clear all [li elements in ul]
-    clearUlListContent();
-
-    //pass the new PageNumber to the async method to fetch data with the newPageValue
-    newsArray.push(await getNewsToDisplay(paginationData.page));
-    console.log(newsArray);
-
-    renderUI(paginationData.fetchedDataArrayIndex);
-});
 
 //called to clear existing ul li (content)
 // so as to get new data to be fetched and inserted
@@ -295,8 +335,38 @@ const clearUlListContent = () => {
     }
 }
 
+//on searchBtn click, run new functionCall
+submitBtn.addEventListener('click', () => {
+    //call newsFxn handler
+    fetchNewsHandler(paginationData);
+
+    //selectedTagEls
+    //reset pagination pageValue, when a new search is made
+    paginationData.resetPageValue();
+
+    //reset currentPage innerHTML value
+    paginationData.resetCurrentPageInnerHTMLValue();
+});
+
+
+//nextPageLoad btn pressed
+nextPageLoadBtn.addEventListener('click', () => {
+    //call obj Fxn to Increase pageValue
+    paginationData.incrementPageValue();
+    console.log("new page = " + paginationData.page);
+
+    //set the currentpage Number
+    paginationData.setCurrentPage();
+
+    //call newsFxn handler
+    fetchNewsHandler(paginationData);
+
+    //clear all [li elements in ul]
+    //clearUlListContent();
+});
+
 //prevPageLoad btn pressed
-prevPageLoadBtn.addEventListener('click', async () => {
+prevPageLoadBtn.addEventListener('click', () => {
     //call obj Fxn to decrease pageValue
     paginationData.decrementPageValue();
     console.log("new page = " + paginationData.page);
@@ -304,45 +374,10 @@ prevPageLoadBtn.addEventListener('click', async () => {
     //set the currentpage Number
     paginationData.setCurrentPage();
 
-    //on nextBtn pressed we fetch a new data into the array
-    //of which we would need to display in the browser, and hence
-    //this sets the arrayIndex to loop through to populate our data
-    paginationData.decrementFetchedDataArrayIndexValue();
+    //call newsFxn handler
+    fetchNewsHandler(paginationData);
 
     //clear all [li elements in ul]
-    clearUlListContent();
-
-    //pass the new PageNumber to the async method to fetch data with the newPageValue
-    newsArray.push(await getNewsToDisplay(paginationData.page));
-    console.log(newsArray);
-
-    renderUI(paginationData.fetchedDataArrayIndex);
+    //clearUlListContent();
 });
-
-//selectElement selected to filter fetchedNews
-sortByElement.addEventListener('change', async (event) => {
-    console.log("&tag=" + event.target.value);
-    //In searching for a new newsFeed,
-    //first clear the contents of the array
-    newsArray = [];
-
-    //clear all [li elements in ul]
-    clearUlListContent();
-
-    //reset pagination pageValue, when a new search is made
-    paginationData.resetPageValue();
-
-    //reset fetchedArrayIndexValue, when a new search is made
-    paginationData.resetFetchedArrayIndexValue();
-
-    //reset currentPage innerHTML value
-    paginationData.resetCurrentPageInnerHTMLValue();
-
-    let retrievedNewsData = await fetchHackerNews_data(getSearchTextTerm(searchField), page, event.target.value)
-    console.log(retrievedNewsData);
-    newsArray.push(await retrievedNewsData);
-    renderUI(fetchedDataArrayIndex);
-});
-
-
 

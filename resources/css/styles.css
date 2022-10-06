@@ -9,7 +9,7 @@ body{
 
 .grid-container{
     display: grid;
-    grid-template: 100px 50px 8fr 50px 100px / repeat(12,1fr);
+    grid-template: 100px 50px 8fr 50px 1/ repeat(12,1fr);
 }
 
 /*-----------------header-------------------------*/
@@ -65,7 +65,7 @@ header nav .toggle-layout-buttons li:nth-child(3){
 
 /*-----------------header ends here-----------------------*/
 
-#show-deletebtn{
+#sortBy{
     display: flex;
     justify-content: space-around;
     grid-column: 1 / span 12;
@@ -74,19 +74,15 @@ header nav .toggle-layout-buttons li:nth-child(3){
     align-items: center;
 }
 
-#show-deletebtn ul{
-    display: flex;
-    list-style-type: none;
+/*styling tags Filter select options*/
+#tagsDialog{
+    padding: 1rem 4rem;
 }
 
-#show-deletebtn ul li{
-    padding-right: 1rem;
-    padding-left: 1rem;
-    border: 1px solid black;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-} 
-
+#tagsDialog select{
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
 
 /*partition the main divs when continuing*/
 
@@ -113,6 +109,7 @@ main #newsList ul{
     justify-content: space-around;
     grid-column: 1 / span 12;
     background-color: #d8d8d8;
+    padding: 1rem;
 }
 
 #show-pagination .pageLoadBtns{

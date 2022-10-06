@@ -1,6 +1,6 @@
 import { defaultQuery } from '../js/constants.js';
 
-function getSearchTextTerm(domInputElement){
+const  getSearchTextTerm = (domInputElement) => {
     let searchTextTerm = "";
     if(domInputElement.value === ""){
         searchTextTerm = defaultQuery;
