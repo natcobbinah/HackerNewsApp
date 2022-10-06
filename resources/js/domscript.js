@@ -335,6 +335,21 @@ const clearUlListContent = () => {
     }
 }
 
+//on enterKey pressed in searchField
+searchField.addEventListener('keydown', (e) => {
+    if (e.key == "Enter") {
+        //call newsFxn handler
+        fetchNewsHandler(paginationData);
+
+        //selectedTagEls
+        //reset pagination pageValue, when a new search is made
+        paginationData.resetPageValue();
+
+        //reset currentPage innerHTML value
+        paginationData.resetCurrentPageInnerHTMLValue();
+    }
+})
+
 //on searchBtn click, run new functionCall
 submitBtn.addEventListener('click', () => {
     //call newsFxn handler

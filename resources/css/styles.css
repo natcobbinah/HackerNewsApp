@@ -17,7 +17,7 @@ header{
     display: flex;
     grid-column: 1 / span 12;
     align-items: center;
-    background-color: #353535;
+    background-color: #f72a0f;
     justify-content: space-around;
 }
 
@@ -135,7 +135,7 @@ footer{
     justify-content: center;
     grid-column: 1 / span 12;
     border: 1px solid black;
-    background-color: #353535;
+    background-color: #f72a0f;
 }
 
 footer p{
