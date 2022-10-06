@@ -1,4 +1,4 @@
-const baseUrl = "http://hn.algolia.com/api/v1";
+const baseUrl = "https://hn.algolia.com/api/v1";
 const itemsUrl = "items";
 const usersUrl = "users";
 const searchUrl = "search";
