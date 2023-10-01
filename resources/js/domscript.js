@@ -2,6 +2,7 @@
 import { getSearchTextTerm } from '../modules/searchTextTerm.js';
 import css from '../css/styles.css';
 import { getItem, getUser, searchNews, searchNewsByDate } from './api_methods';
+import { defaultQuery } from './constants.js';
 
 let searchField = document.querySelector('input[type=search]');
 let submitBtn = document.querySelector('input[type=submit]');
@@ -286,6 +287,11 @@ const renderUI = (data) => {
         mainContainer.appendChild(newsListContainer);
     });
 }
+
+//default query on page load first time
+searchNews()(defaultQuery)()()
+            .then(data => renderUI(data))
+            .catch((error) => console.log(error));
 
 
 //pagination related logics 

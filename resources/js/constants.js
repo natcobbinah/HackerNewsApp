@@ -3,6 +3,6 @@ const itemsUrl = "items";
 const usersUrl = "users";
 const searchUrl = "search";
 const searchByDateUrl = "search_by_date"
-const defaultQuery = "cracking";
+const defaultQuery = "front_page";
 
 export {baseUrl, defaultQuery, itemsUrl, usersUrl, searchUrl, searchByDateUrl};

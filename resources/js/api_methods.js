@@ -35,27 +35,36 @@ const getUser = (username) => {
 
 
 const searchNews = (query) => (tags = []) => (numericFilters) => (page) => {
-    let getNews = apiUrl(searchUrl);
+    let getNews = "";
     if (query && tags && numericFilters && page) {
-        getNews = apiUrl(`${searchUrl}?query=${query}&tags=${tagsFilter(tags)}&numericFilters=${numericFilters}&page=${page}`);
-    } else if (query && tags && page) {
-        getNews = apiUrl(`${searchUrl}?query=${query}&tags=${tagsFilter(tags)}&page=${page}`);
-    } else if (query && page && numericFilters) {
+        getNews = apiUrl(`${searchUrl}?query=${query}&tags=${(tagsFilter(tags))}&numericFilters=${numericFilters}&page=${page}`);
+        return getNews(httpGet).then((res) => res.json());
+    } 
+    
+    if (query && tags && page) {
+        getNews = apiUrl(`${searchUrl}?query=${query}&tags=${(tagsFilter(tags))}&page=${page}`);
+        return getNews(httpGet).then((res) => res.json());
+    } 
+    
+    if (query && page && numericFilters) {
         getNews = apiUrl(`${searchUrl}?query=${query}&numericFilters=${numericFilters}&page=${page}`);
-    } else if (query && page) {
+        return getNews(httpGet).then((res) => res.json());
+    } 
+    
+    if (query && page) {
         getNews = apiUrl(`${searchUrl}?query=${query}&page=${page}`);
-    } else {
-        getNews = apiUrl(`${searchUrl}?query=${query}`);
-    }
-    return getNews(httpGet).then((res) => res.json());
+        return getNews(httpGet).then((res) => res.json());
+    } 
+      
+    return   apiUrl(`${searchUrl}?query=${query}`)(httpGet).then((res) => res.json());
 }
 
 const searchNewsByDate = (query) => (tags) => (numericFilters) => (page) => {
     let getNewsByDate = apiUrl(searchByDateUrl);
     if (query && tags && numericFilters && page) {
-        getNewsByDate = apiUrl(`${searchByDateUrl}?query=${query}&tags=${tagsFilter(tags)}&numericFilters=${numericFilters}&page=${page}`);
+        getNewsByDate = apiUrl(`${searchByDateUrl}?query=${query}&tags=${(tagsFilter(tags))}&numericFilters=${numericFilters}&page=${page}`);
     } else if (query && tags && page) {
-        getNewsByDate = apiUrl(`${searchByDateUrl}?query=${query}&tags=${tagsFilter(tags)}&page=${page}`);
+        getNewsByDate = apiUrl(`${searchByDateUrl}?query=${query}&tags=${(tagsFilter(tags))}&page=${page}`);
     } else if (query && page && numericFilters) {
         getNewsByDate = apiUrl(`${searchByDateUrl}?query=${query}&numericFilters=${numericFilters}&page=${page}`);
     } else if (query && page) {
