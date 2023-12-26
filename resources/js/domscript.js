@@ -1,5 +1,5 @@
 //import { fetchHackerNews_data } from './api_methods.js';
-import { getSearchTextTerm } from '../modules/searchTextTerm.js';
+//import { getSearchTextTerm } from '../modules/searchTextTerm.js';
 import css from '../css/styles.css';
 import { getItem, getUser, searchNews, searchNewsByDate } from './api_methods';
 import { defaultQuery } from './constants.js';
@@ -43,46 +43,6 @@ const numericFilterConfirmBtn = document.querySelector("#numericFilterDialog div
 
 let page = 0;
 
-/* let newsToFetch = "redux";
-let tagsApplied = ["comment"];
-let numericFilters = "points < 50";
-searchNews(newsToFetch)(tagsApplied)(numericFilters)()
-    .then(data => renderUI(data))
-    .catch((error) => console.log(error)); */
-
-//get Results from API-ENDPOINTS
-/* 
-let itemNo = 34;
-
-getItem(itemNo)
-    .then((data) => console.log(data))
-    .catch((error) => console.log(error));
-
-
-let name = "patricktomas";
-getUser(name)
-.then((data) => console.log(data))
-.catch((error) => console.log(error));
-
-
-let newsToFetch = "redux";
-let tagsApplied = ["comment"];
-let numericFilters = "points > 50";
-searchNews(newsToFetch)(tagsApplied)(numericFilters)()
-    .then((data) => newsArray.push(data))
-    .then(newsfeed => renderUI(newsfeed))
-    .catch((error) => console.log(error));
- */
-
-/* 
-let tagsAppliedToSearchByDate = ["comment"];
-let numeriFilterAppliedToDate = "04/09/2022 > 20:00";
-searchNewsByDate()(tagsAppliedToSearchByDate)(numeriFilterAppliedToDate)()
-.then((data) => console.log(data))
-.catch((error) => console.log(error)); */
-
-
-
 // tagsDialogButton button opens a modal dialog-------------------
 tagsDialogButton.addEventListener("click", () => {
     dialog.showModal();
@@ -125,20 +85,15 @@ function clearloadingGIF() {
     }
 }
 
-//fxn to setLoading gif for News
-function setloadingGIF() {
-    for (let i = 0; i < ulGifElement.length - 1; i++) {
-        ulGifElement[i].style.backgroundImage = "url('../images/loading.gif')";
-    }
-}
-
 const fetchNewsHandler = (paginationData) => {
     console.log("page = " + paginationData.page)
+
     if (Number(searchField.value)) {
         console.log("call getItem fxn")
         getItem(searchField.value)
             .then((data) => renderUI_fetchByID(data))
             .catch((error) => console.log(error));
+
     } else if ((numericFilterPointsGt.value > 0 ||
         numericFilterPointsLt.value > 0) && numericFilterCreatedAtDate.value != "" && (selectedTagEls.options)) {
         console.log("call searchNewsByDate fxn")
@@ -147,6 +102,7 @@ const fetchNewsHandler = (paginationData) => {
         searchNewsByDate()(tagsAppliedToSearchByDate)(numericFilterCreatedAtDate.value)(paginationData.page)
             .then((data) => renderUI(data))
             .catch((error) => console.log(error));
+
     } else if (typeof searchField.value === 'string' && (numericFilterPointsGt.value > 0 ||
         numericFilterPointsLt.value > 0) && (selectedTagEls.options)) {
         console.log("call searchNews fxn")
@@ -156,11 +112,13 @@ const fetchNewsHandler = (paginationData) => {
         searchNews(searchField.value)(tagsApplied)(numericFilters)(paginationData.page)
             .then(data => renderUI(data))
             .catch((error) => console.log(error));
+
     } else if (typeof searchField.value === 'string') {
         console.log("call searchNews fxn only String")
         searchNews(searchField.value)()()(paginationData.page)
             .then(data => renderUI(data))
             .catch((error) => console.log(error));
+
     } else {
         console.log("call searchNews fxn last else")
         searchNews(searchField.value)()()(paginationData.page)
@@ -290,8 +248,8 @@ const renderUI = (data) => {
 
 //default query on page load first time
 searchNews()(defaultQuery)()()
-            .then(data => renderUI(data))
-            .catch((error) => console.log(error));
+    .then(data => renderUI(data))
+    .catch((error) => console.log(error));
 
 
 //pagination related logics 
@@ -332,14 +290,6 @@ let paginationData = {
     }
 }
 
-//called to clear existing ul li (content)
-// so as to get new data to be fetched and inserted
-const clearUlListContent = () => {
-    for (let index = 0; index <= 19; index++) {
-        let ul = document.getElementById(`${"newsObj" + index}`);
-        ul.innerHTML = "";
-    }
-}
 
 //on enterKey pressed in searchField
 searchField.addEventListener('keydown', (e) => {
@@ -401,4 +351,65 @@ prevPageLoadBtn.addEventListener('click', () => {
     //clear all [li elements in ul]
     //clearUlListContent();
 });
+
+
+
+
+
+
+
+/*
+//fxn to setLoading gif for News
+function setloadingGIF() {
+    for (let i = 0; i < ulGifElement.length - 1; i++) {
+        ulGifElement[i].style.backgroundImage = "url('../images/loading.gif')";
+    }
+}
+
+//called to clear existing ul li (content)
+// so as to get new data to be fetched and inserted
+const clearUlListContent = () => {
+    for (let index = 0; index <= 19; index++) {
+        let ul = document.getElementById(`${"newsObj" + index}`);
+        ul.innerHTML = "";
+    }
+}
+
+let newsToFetch = "redux";
+let tagsApplied = ["comment"];
+let numericFilters = "points < 50";
+searchNews(newsToFetch)(tagsApplied)(numericFilters)()
+    .then(data => renderUI(data))
+    .catch((error) => console.log(error)); */
+
+//get Results from API-ENDPOINTS
+/* 
+let itemNo = 34;
+
+getItem(itemNo)
+    .then((data) => console.log(data))
+    .catch((error) => console.log(error));
+
+
+let name = "patricktomas";
+getUser(name)
+.then((data) => console.log(data))
+.catch((error) => console.log(error));
+
+
+let newsToFetch = "redux";
+let tagsApplied = ["comment"];
+let numericFilters = "points > 50";
+searchNews(newsToFetch)(tagsApplied)(numericFilters)()
+    .then((data) => newsArray.push(data))
+    .then(newsfeed => renderUI(newsfeed))
+    .catch((error) => console.log(error));
+ */
+
+/* 
+let tagsAppliedToSearchByDate = ["comment"];
+let numeriFilterAppliedToDate = "04/09/2022 > 20:00";
+searchNewsByDate()(tagsAppliedToSearchByDate)(numeriFilterAppliedToDate)()
+.then((data) => console.log(data))
+.catch((error) => console.log(error)); */
 

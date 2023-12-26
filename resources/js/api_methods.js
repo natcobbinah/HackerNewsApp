@@ -1,19 +1,5 @@
 import { baseUrl, itemsUrl, usersUrl, searchUrl, searchByDateUrl } from './constants.js';
 
-/* const fetchHackerNews_data = async (inputSearchValue, page = 0, tags = "") => {
-    console.log(`${inputSearchValue} and page= ${page} and tags = ${tags}`);
-    try {
-        let response = await fetch(`${baseUrl}?query=${inputSearchValue}&page=${page}&tags=${tags}`);
-        if (response.ok) {
-            let jsonResponse = await response.json();
-            return jsonResponse;
-        }
-    } catch (error) {
-        console.log(error);
-    }
-}
-
-export { fetchHackerNews_data };  */
 const fetchClient = (url) => (resource) => (method) => {
     return fetch(`${url}/${resource}`, {
         method: method,
@@ -36,27 +22,33 @@ const getUser = (username) => {
 
 const searchNews = (query) => (tags = []) => (numericFilters) => (page) => {
     let getNews = "";
+
     if (query && tags && numericFilters && page) {
         getNews = apiUrl(`${searchUrl}?query=${query}&tags=${(tagsFilter(tags))}&numericFilters=${numericFilters}&page=${page}`);
         return getNews(httpGet).then((res) => res.json());
-    } 
-    
+    }
+
     if (query && tags && page) {
         getNews = apiUrl(`${searchUrl}?query=${query}&tags=${(tagsFilter(tags))}&page=${page}`);
         return getNews(httpGet).then((res) => res.json());
-    } 
-    
+    }
+
+    if (tags && page) {
+        getNews = apiUrl(`${searchUrl}?tags=${(tagsFilter(tags))}&page=${page}`);
+        return getNews(httpGet).then((res) => res.json());
+    }
+
     if (query && page && numericFilters) {
         getNews = apiUrl(`${searchUrl}?query=${query}&numericFilters=${numericFilters}&page=${page}`);
         return getNews(httpGet).then((res) => res.json());
-    } 
-    
+    }
+
     if (query && page) {
         getNews = apiUrl(`${searchUrl}?query=${query}&page=${page}`);
         return getNews(httpGet).then((res) => res.json());
-    } 
-      
-    return   apiUrl(`${searchUrl}?query=${query}`)(httpGet).then((res) => res.json());
+    }
+
+    return apiUrl(`${searchUrl}?query=${query}`)(httpGet).then((res) => res.json());
 }
 
 const searchNewsByDate = (query) => (tags) => (numericFilters) => (page) => {
@@ -80,4 +72,27 @@ const tagsFilter = (tags) => {
     return tags.join(","); //flats out selected tags to string from Array container and AND-ded by default
 }
 
-export { getItem, getUser, searchNews, searchNewsByDate }; 
+export { getItem, getUser, searchNews, searchNewsByDate };
+
+
+
+
+
+
+
+
+//not used
+/* const fetchHackerNews_data = async (inputSearchValue, page = 0, tags = "") => {
+    console.log(`${inputSearchValue} and page= ${page} and tags = ${tags}`);
+    try {
+        let response = await fetch(`${baseUrl}?query=${inputSearchValue}&page=${page}&tags=${tags}`);
+        if (response.ok) {
+            let jsonResponse = await response.json();
+            return jsonResponse;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+export { fetchHackerNews_data };  */
