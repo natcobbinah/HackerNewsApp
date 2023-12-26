@@ -1,19 +1,19 @@
-html{
+html {
     font-size: 16px;
 }
 
-body{
+body {
     margin: auto;
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.grid-container{
+.grid-container {
     display: grid;
-    grid-template: 100px 50px 8fr 50px 1/ repeat(12,1fr);
+    grid-template: 100px 50px 8fr 50px 1/ repeat(12, 1fr);
 }
 
 /*-----------------header-------------------------*/
-header{
+header {
     display: flex;
     grid-column: 1 / span 12;
     align-items: center;
@@ -21,51 +21,51 @@ header{
     justify-content: space-around;
 }
 
-header #search-box ul{
-   display: flex;
-   list-style-type: none;
+header #search-box ul {
+    display: flex;
+    list-style-type: none;
 }
 
-header #search-box ul li:first-child{
+header #search-box ul li:first-child {
     color: #fff;
-}  
+}
 
-header #search-box ul li{
+header #search-box ul li {
     padding: 0 0.5rem;
 }
 
-header #search-box ul .search-container input{
+header #search-box ul .search-container input {
     padding: 15px;
     border: none;
 }
 
-header #search-box ul .search-container input:first-child{
+header #search-box ul .search-container input:first-child {
     width: 50rem;
 }
 
-header nav{
+header nav {
     display: flex;
 }
 
-header nav .toggle-layout-buttons{
+header nav .toggle-layout-buttons {
     display: flex;
     list-style-type: none;
     color: #fff;
     font-size: 1.5rem;
 }
 
-header nav .toggle-layout-buttons li{
+header nav .toggle-layout-buttons li {
     padding: 0 0.5rem;
 }
 
-header nav .toggle-layout-buttons li:nth-child(2), 
-header nav .toggle-layout-buttons li:nth-child(3){
+header nav .toggle-layout-buttons li:nth-child(2),
+header nav .toggle-layout-buttons li:nth-child(3) {
     border: 1px solid white;
 }
 
 /*-----------------header ends here-----------------------*/
 
-#sortBy{
+#sortBy {
     display: flex;
     justify-content: space-around;
     grid-column: 1 / span 12;
@@ -75,36 +75,36 @@ header nav .toggle-layout-buttons li:nth-child(3){
 }
 
 /*styling tags Filter select options*/
-#tagsDialog{
+#tagsDialog {
     padding: 1rem 4rem;
 }
 
-#tagsDialog select{
+#tagsDialog select {
     padding: 1.5rem;
     margin-bottom: 1rem;
 }
 
 /*partition the main divs when continuing*/
 
-main{
+main {
     grid-column: 1 / span 12;
     background-color: #d8d8d8;
 }
 
-main #newsList{
+main #newsList {
     grid-column: 1 / span 12;
 }
 
-main #newsList ul{
-  border: 1px solid black;
-  padding: 6rem;
-  background-image: url('../images/loading.gif');
-  margin: 2rem;
-  background-repeat: no-repeat;
-  background-color: #fff;
+main #newsList ul {
+    border: 1px solid black;
+    padding: 6rem;
+    background-image: url('../assets/loading.gif');
+    margin: 2rem;
+    background-repeat: no-repeat;
+    background-color: #fff;
 }
 
-#show-pagination{
+#show-pagination {
     display: flex;
     justify-content: space-around;
     grid-column: 1 / span 12;
@@ -112,24 +112,24 @@ main #newsList ul{
     padding: 1rem;
 }
 
-#show-pagination .pageLoadBtns{
+#show-pagination .pageLoadBtns {
     display: flex;
     align-items: center;
     justify-content: flex-end;
 }
 
 #show-pagination .pageLoadBtns #prevPageLoadBtn,
-#show-pagination .pageLoadBtns #nextPageLoadBtn{
+#show-pagination .pageLoadBtns #nextPageLoadBtn {
     margin-right: 0.4rem;
     padding: 0.7rem;
 }
 
-#show-pagination .pageLoadBtns p i{
+#show-pagination .pageLoadBtns p i {
     margin: 0.2rem;
 }
 
 
-footer{
+footer {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -138,14 +138,14 @@ footer{
     background-color: #f72a0f;
 }
 
-footer p{
+footer p {
     color: #fff;
 }
 
 /*media queries*/
-@media only screen and (max-width: 480px){
-    header #search-box ul .search-container input:first-child{
+@media only screen and (max-width: 480px) {
+    header #search-box ul .search-container input:first-child {
         width: 15rem;
     }
-    
+
 }
