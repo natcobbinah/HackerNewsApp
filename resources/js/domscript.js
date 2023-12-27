@@ -1,6 +1,8 @@
 //import { fetchHackerNews_data } from './api_methods.js';
 //import { getSearchTextTerm } from '../modules/searchTextTerm.js';
 import css from '../css/styles.css';
+import html from '../../index.html'
+
 import { getItem, getUser, searchNews, searchNewsByDate } from './api_methods';
 import { defaultQuery } from './constants.js';
 
