@@ -56,6 +56,16 @@ cancelButton.addEventListener("click", () => {
 tagValuesConfirmBtn.addEventListener("click", () => {
     [...selectedTagEls.options].filter(option => option.selected)
         .map(option => console.log(option.value))
+
+    //call newsFxn handler
+    fetchNewsHandler(paginationData);
+
+    //selectedTagEls
+    //reset pagination pageValue, when a new search is made
+    paginationData.resetPageValue();
+
+    //reset currentPage innerHTML value
+    paginationData.resetCurrentPageInnerHTMLValue();
 })
 //----------end of tags dialog functionality ---------------------
 
@@ -73,6 +83,16 @@ numericFilterConfirmBtn.addEventListener("click", () => {
     console.log(numericFilterPointsGt.value);
     console.log(numericFilterPointsLt.value);
     console.log(numericFilterCreatedAtDate.value);
+
+    //call newsFxn handler
+    fetchNewsHandler(paginationData);
+
+    //selectedTagEls
+    //reset pagination pageValue, when a new search is made
+    paginationData.resetPageValue();
+
+    //reset currentPage innerHTML value
+    paginationData.resetCurrentPageInnerHTMLValue();
 })
 
 //----------end of tags dialog functionality ---------------------
@@ -246,11 +266,6 @@ const renderUI = (data) => {
     });
 }
 
-//default query on page load first time
-searchNews()(defaultQuery)()()
-    .then(data => renderUI(data))
-    .catch((error) => console.log(error));
-
 
 //pagination related logics 
 let paginationData = {
@@ -290,6 +305,10 @@ let paginationData = {
     }
 }
 
+//default query on page load first time
+searchNews(defaultQuery)()()(paginationData.page)
+    .then(data => renderUI(data))
+    .catch((error) => console.log(error));
 
 //on enterKey pressed in searchField
 searchField.addEventListener('keydown', (e) => {
